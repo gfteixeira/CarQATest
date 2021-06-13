@@ -1,0 +1,2 @@
+min_price 25410
+max_price 29510

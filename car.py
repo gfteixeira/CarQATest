@@ -43,7 +43,6 @@ def readMaxPrice():
 
 def updateValue(arg, value):
     min = readMinPrice()
-
     max = readMaxPrice()
     with open(filename, 'w+') as txt_file:
 
@@ -67,15 +66,17 @@ def selectModel(driver):
     iframe = driver.find_element_by_id('vmos-cont')
     driver.switch_to.frame(iframe)
 
-    elem2 = driver.find_element_by_class_name("vmos_NvMoW")
-    hover = ActionChains(driver).move_to_element(elem2)
+    model = driver.find_element_by_class_name("vmos_NvMoW")
+    hover = ActionChains(driver).move_to_element(model)
     hover.perform()
     time.sleep(5)
-    elem = driver.find_element_by_class_name("vmos_3HxTq.undefined")
+
+    build = driver.find_element_by_class_name("vmos_3HxTq.undefined")
     time.sleep(5)
 
-    elem.click()
+    build.click()
     time.sleep(5)
+
 
 
 def carConfiguration(driver):
@@ -85,31 +86,15 @@ def carConfiguration(driver):
     driver.execute_script("window.scrollTo(0, 972);")
     time.sleep(10)
 
-    elem5 = driver.find_element_by_xpath("//input[@aria-labelledby='Diesel']")
+    diesel = driver.find_element_by_xpath("//input[@aria-labelledby='Diesel']")
 
-    scroll = ActionChains(driver).move_to_element(elem5).click().perform()
+    dieselCheckbox = ActionChains(driver).move_to_element(diesel).click().perform()
     time.sleep(10)
+
 
 
 def screenshots():
     driver.save_screenshot("cars_1.png")
-    # #
-    # # pagination = driver.find_elements_by_class_name(
-    # #     "cc-motorization-comparision-status__pagination")
-    #
-    # buttonRq = driver.find_element_by_class_name("cc-slider-buttons__button--left.ng-star-inserted")
-    #
-    # #buttonR = driver.find_element_by_xpath("//button[@class='cc-slider-buttons__button--left.ng-star-inserted']")
-    #
-    # # buttonR = WebDriverWait(driver, 10).until(
-    # #     EC.element_to_be_clickable((By.CLASS_NAME,
-    # #                                 "cc-slider")))
-    # print(buttonRq)
-    # buttonRq.click()
-    # driver.save_screenshot("cars_2.png")
-    #
-    # buttonRq.click()
-    # driver.save_screenshot("cars_3.png")
 
 
 def priceChecker():
@@ -117,17 +102,18 @@ def priceChecker():
         "cc-motorization-header__price.cc-text.ng-star-inserted")
 
     for car in carsList:
-        driver.implicitly_wait(10)
-        value = car.text.split('£')
-        priceSplit = value[1].replace(',', '')
-        price = int(priceSplit)
-        min_price = readMinPrice()
-        max_price = readMaxPrice()
-        if price < min_price:
-            updateValue('min_price', price)
+        value_aux = car.text
+        if '£' in value_aux:
+            value = value_aux.split('£')
+            priceSplit = value[1].replace(',', '')
+            price = int(priceSplit)
+            min_price = readMinPrice()
+            max_price = readMaxPrice()
+            if price < min_price:
+                updateValue('min_price', price)
 
-        if price > max_price:
-            updateValue('max_price', price)
+            if price > max_price:
+                updateValue('max_price', price)
 
 
 def priceAssert():
@@ -142,6 +128,7 @@ if __name__ == "__main__":
 
     try:
         driver = webdriver.Firefox()
+        #driver = webdriver.Chrome()
         driver.implicitly_wait(10)
         driver.get("http://www.mercedes-benz.co.uk")
 

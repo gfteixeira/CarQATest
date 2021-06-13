@@ -1,4 +1,4 @@
-# MercedesQATest
+# CarQATest
 
 # Requirements
 GeckoDriver 0.29.1 -> For Firefox	(https://github.com/mozilla/geckodriver/releases)
